@@ -15,7 +15,7 @@
 # upgrade all packages
 - name: upgrade all packages
   yum: 
-    name: * 
+    name: '*' 
     state: latest
   notify:
   - Restart server
