@@ -18,5 +18,6 @@
     name: '*' 
     state: latest
   notify:
-  - Restart server
+  - Restart server if not lxc container
+  - Restart lxc container 
   - Wait for server to restart
