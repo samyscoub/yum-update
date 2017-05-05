@@ -20,6 +20,7 @@
   with_items:
   - python2-pip
   - gcc
+  - python-devel
     
 - name: dependencies for ansible lxc module
   pip:
