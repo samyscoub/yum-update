@@ -5,9 +5,18 @@
 ##    with_items:
 ##     - glibc
 
+# fix problem with filesyetm package on centos 7
+- name: ensure that filesystem package will be upgraded
+  lineinfile:
+    path: /etc/rpm/macros.dist
+    line: '%_netsharedpath /sys:/proc'
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == '7'
+
 # upgrade all packages
-  - name: upgrade all packages
-    yum: name=* state=latest
-    notify:
-           - Restart server
-           - Wait for server to restart
+- name: upgrade all packages
+  yum: 
+    name: * 
+    state: latest
+  notify:
+  - Restart server
+  - Wait for server to restart
