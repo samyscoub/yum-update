@@ -21,6 +21,7 @@
   - python2-pip
   - gcc
   - python-devel
+  - lxc-devel
     
 - name: dependencies for ansible lxc module
   pip:
