@@ -15,8 +15,11 @@
 # dependencies
 - name: Install provisioning dependencies
   yum: 
-    name: python2-pip
+    name: "{{ item }}" 
     state: latest
+  with_items:
+  - python2-pip
+  - gcc
     
 - name: dependencies for ansible lxc module
   pip:
