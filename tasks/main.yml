@@ -12,8 +12,8 @@
     line: '%_netsharedpath /sys:/proc'
   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == '7'
 
-# dependencies
-- name: Install provisioning dependencies
+# dependencies for CentOS LXC hypervisor host
+- name: Install provisioning host dependencies
   yum: 
     name: "{{ item }}" 
     state: latest
@@ -22,10 +22,26 @@
   - gcc
   - python-devel
   - lxc-devel
-    
+  when: ansible_distribution == "CentOS"
+
+# dependencies for Debian LXC hypervisor host
+- name: Install provisioning host dependencies
+  apt: 
+    name: "{{ item }}" 
+    update_cache: yes
+    state: latest
+  with_items:
+  - python2-pip
+  - gcc
+  - python-dev
+  - lxc-dev
+  when: ansible_distribution == "Debian"
+
+
 - name: dependencies for ansible lxc module
   pip:
     name: lxc-python2
+  delegate_to: localhost
   when: ansible_virtualization_type == "lxc"
 
 # upgrade all packages
