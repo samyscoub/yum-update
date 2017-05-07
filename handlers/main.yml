@@ -10,6 +10,7 @@
   lxc_container:
     name: "{{ inventory_hostname }}"
     state: restarted
+  delegate_to: localhost
   when: ansible_virtualization_type == "lxc"
 
 - name: Wait for server to restart
