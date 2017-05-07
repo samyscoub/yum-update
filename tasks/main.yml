@@ -22,7 +22,8 @@
   - gcc
   - python-devel
   - lxc-devel
-  when: ansible_distribution == "CentOS"
+  delegate_to: localhost
+  when: ansible_distribution == "CentOS" and ansible_virtualization_type == "lxc"
 
 # dependencies for Debian LXC hypervisor host
 - name: Install provisioning host dependencies
@@ -35,7 +36,8 @@
   - gcc
   - python-dev
   - lxc-dev
-  when: ansible_distribution == "Debian"
+  delegate_to: localhost
+  when: ansible_distribution == "Debian" and ansible_virtualization_type == "lxc"
 
 
 - name: dependencies for ansible lxc module
