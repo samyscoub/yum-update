@@ -1,10 +1,4 @@
 ---
-# example for update only glibc
-##  - name: Update to latest state 
-##    yum: name={{ item }} state=latest
-##    with_items:
-##     - glibc
-
 # fix problem with filesyetm package on centos 7
 - name: ensure that filesystem package will be upgraded
   lineinfile:
@@ -14,18 +8,13 @@
 
 # set fact for localhost ansible client
 - name: Save os from ansible client
-  set_fact:
-    local_distribution: "{{ ansible_distribution }}"
+  setup:
+    gather_subset: '!all'
   delegate_to: localhost
-  delegate_facts: True
+  delegate_facts: true
     
-# debug local_distribution
-- name: Debug local_distribution fact
-  debug:
-    var: local_distribution
-
 # dependencies for CentOS LXC hypervisor host
-- name: Install provisioning host dependencies
+- name: Install provisioning CentOS LXC hypervisor host dependencies
   yum: 
     name: "{{ item }}" 
     state: latest
@@ -35,28 +24,28 @@
   - python-devel
   - lxc-devel
   delegate_to: localhost
-  when: local_distribution == "CentOS" and ansible_virtualization_type == "lxc"
+  when: hostvars['localhost'].ansible_distribution == "CentOS" and ansible_virtualization_type == "lxc" and yum_update_autorestart
   
 # dependencies for Debian LXC hypervisor host
-- name: Install provisioning host dependencies
+- name: Install provisioning Debian LXC hypervisor host dependencies
   apt: 
     name: "{{ item }}" 
     update_cache: yes
     state: latest
   with_items:
-  - python2-pip
+  - python-pip
   - gcc
   - python-dev
   - lxc-dev
   delegate_to: localhost
-  when: local_distribution == "Debian" and ansible_virtualization_type == "lxc"
+  when: hostvars['localhost'].ansible_distribution == "Debian" and ansible_virtualization_type == "lxc" and yum_update_autorestart
 
 # module to manage LXC containers
 - name: dependencies for ansible lxc module
   pip:
     name: lxc-python2
   delegate_to: localhost
-  when: ansible_virtualization_type == "lxc"
+  when: ansible_virtualization_type == "lxc" and yum_update_autorestart
 
 # upgrade all packages
 - name: upgrade all packages

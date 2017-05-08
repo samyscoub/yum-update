@@ -4,14 +4,14 @@
   async: 0
   poll: 0
   ignore_errors: true
-  when: ansible_virtualization_type != "lxc"
+  when: ansible_virtualization_type != "lxc" and yum_update_autorestart
 
 - name: Restart lxc container
   lxc_container:
     name: "{{ inventory_hostname }}"
     state: restarted
   delegate_to: localhost
-  when: ansible_virtualization_type == "lxc"
+  when: ansible_virtualization_type == "lxc" and yum_update_autorestart
 
 - name: Wait for server to restart
   local_action: wait_for host={{ inventory_hostname }}
@@ -20,3 +20,4 @@
                          delay=30 
                          timeout=300 
                          connect_timeout=15
+  when: yum_update_autorestart
