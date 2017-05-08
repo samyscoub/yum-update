@@ -16,8 +16,8 @@
 - name: Save os from ansible client
   set_fact:
     local_distribution: "{{ ansible_distribution }}"
-    delegate_to: localhost
-    delegate_facts: True
+  delegate_to: localhost
+  delegate_facts: True
     
 # debug local_distribution
 - name: Debug local_distribution fact
