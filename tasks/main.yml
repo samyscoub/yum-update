@@ -12,6 +12,18 @@
     line: '%_netsharedpath /sys:/proc'
   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == '7'
 
+# set fact for localhost ansible client
+- name: Save os from ansible client
+  set_fact:
+    local_distribution: "{{ ansible_distribution }}"
+    delegate_to: localhost
+    delegate_facts: True
+    
+# debug local_distribution
+- name: Debug local_distribution fact
+  debug:
+    var: local_distribution
+
 # dependencies for CentOS LXC hypervisor host
 - name: Install provisioning host dependencies
   yum: 
@@ -23,8 +35,8 @@
   - python-devel
   - lxc-devel
   delegate_to: localhost
-  when: ansible_distribution == "CentOS" and ansible_virtualization_type == "lxc"
-
+  when: local_distribution == "CentOS" and ansible_virtualization_type == "lxc"
+  
 # dependencies for Debian LXC hypervisor host
 - name: Install provisioning host dependencies
   apt: 
@@ -37,9 +49,9 @@
   - python-dev
   - lxc-dev
   delegate_to: localhost
-  when: ansible_distribution == "Debian" and ansible_virtualization_type == "lxc"
+  when: local_distribution == "Debian" and ansible_virtualization_type == "lxc"
 
-
+# module to manage LXC containers
 - name: dependencies for ansible lxc module
   pip:
     name: lxc-python2
